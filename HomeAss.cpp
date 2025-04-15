@@ -12,7 +12,7 @@ struct product
 {
     string serialNum;
     int quantity;
-    float sales[4][7];
+    int sales[4][7];
     float price;
     float avgSales; //for a month
 };
@@ -24,6 +24,7 @@ void displayProduct( product products[],int num_Of_Products);
 void discountFor6ItemsLeft( product products[], int num_Of_Products);
 void PriceLessThan(product products[], int numOfProducts, int amount, int &count);
 float avgSales(product products[], int numOfProducts, int productNum);
+void printSales(int sales[][7], int saleamount);
 int menu();
 
 int main()
@@ -35,6 +36,7 @@ int main()
     int num_Of_Products;
     int productNum;
     int weekNum;
+    float salesAmount;
 
     cout << "PLease, Enter the number of products: ";
     cin >> num_Of_Products;
@@ -57,11 +59,8 @@ int main()
             maxSales(products, num_Of_Products, productNum, weekNum);
             break;
         case 3:
-            discountFor6ItemsLeft(products, num_Of_Products);break;    
+            discountFor6ItemsLeft(products, num_Of_Products);break; 
         case 4:
-            displayProduct(products, num_Of_Products);
-            break;
-        case 5:
             int count, amount;
 
             cout << "Enter the amount: "; // the price of products shouldn't be less than this amount.
@@ -70,6 +69,18 @@ int main()
             PriceLessThan(products, num_Of_Products, amount, count);
 
             cout << "The number of products with price less than " << amount << " is " << count << endl;
+            break;
+        case 5:
+            cout << "Enter the product number: ";
+            cin >> productNum;
+            cout << "Enter the sales amount: ";
+            cin >> salesAmount;
+
+            printSales( products[productNum - 1].sales, salesAmount);
+            break;
+
+        case 6:
+            displayProduct(products, num_Of_Products);
             break;
         default : cout
              << "Invalid Choice! please try again.";
@@ -91,8 +102,9 @@ int menu()
     cout << "Press 1 to get products that have less quantity than a certain value." << endl;
     cout << "Press 2 to Get max sales of a certain product in a certain week" << endl;
     cout << "Press 3 to Apply 50% discount for products that have quantity less than 6." << endl;
-    cout << "Press 4 to Display all the products." << endl;
-    cout << "Press 5 to get products less than a certain amount." << endl;
+    cout << "Press 4 to get products less than a certain amount." << endl;
+    cout << "Press 5 to print the sales of a product greater than a certain amount." << endl;
+    cout << "Press 6 to Display all the products." << endl;
     cin >> choice;
     return choice;
 }
@@ -105,7 +117,7 @@ void InputProducts (product products[],int num_Of_Products)
         cout << "Enter values of product #" << (i+1) << endl;
         cout << "Serial number: "; cin >> products[i].serialNum;
         cout << "quantity: "; cin >> products[i].quantity;
-        for (int n = 0; n < 1; n++) // suppose they are 2 weeks (للتسهيل اثناء التيست)
+        for (int n = 0; n < 4; n++) // suppose they are 2 weeks (للتسهيل اثناء التيست)
         {
             cout << "Enter the 7 sales for week " << n + 1 << "\n ";
             for (int j = 0; j < 7; j++)
@@ -172,6 +184,7 @@ void maxSales(product products[], int num_Of_Products, int productNum, int weekN
         }
         daysOfMaxSales[0] = day; //5
     }
+
     cout << "product's maxSales was: " << maxSales;
     cout << " on day(s): ";
     for (int i = 0; i < count; i++)
@@ -203,4 +216,20 @@ float avgSales(product products[], int numOfProducts, int productNum)
         }
     avg = sum / 14;
     return avg;
+}
+
+void printSales(int sales[][7], int saleamount)
+{
+    int day = 0;
+    for(int i = 0;i < 4 ;i++)
+    {
+        for(int j = 0;j < 7;j++)
+        {
+            if(sales[i][j] > saleamount)
+            {
+                day = (j + 1) + (i * 7);
+                cout << "Day " << day << " :" << sales[i][j] << endl;
+            }
+        }
+    }
 }
